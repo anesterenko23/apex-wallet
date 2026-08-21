@@ -11,13 +11,13 @@ import { CopyButton, PageHeader, Panel, SectionTitle } from "@/components/wallet
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
-      { title: "Settings — Aperture Wallet" },
+      { title: "Settings — Apex Wallet" },
       {
         name: "description",
         content:
           "Manage accounts, address book, currency, auto-lock, spam filtering and security preferences for your wallet.",
       },
-      { property: "og:title", content: "Settings — Aperture Wallet" },
+      { property: "og:title", content: "Settings — Apex Wallet" },
       {
         property: "og:description",
         content: "Accounts, address book, currency and security preferences.",
