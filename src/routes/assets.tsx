@@ -6,13 +6,13 @@ import { PrimaryActions } from "@/components/wallet/PrimaryActions";
 export const Route = createFileRoute("/assets")({
   head: () => ({
     meta: [
-      { title: "Assets — Aperture Wallet" },
+      { title: "Assets — Apex Wallet" },
       {
         name: "description",
         content:
           "Browse every token you hold across Ethereum, Solana, Base, Arbitrum and more, with live prices and 24h change.",
       },
-      { property: "og:title", content: "Assets — Aperture Wallet" },
+      { property: "og:title", content: "Assets — Apex Wallet" },
       {
         property: "og:description",
         content: "Every token you hold across eight networks, with prices and 24h change.",
