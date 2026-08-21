@@ -1,3 +1,6 @@
+import type { TransactionReceipt } from "../transactions/types";
+import type { Account, Balance, WalletAsset } from "../wallet/types";
+
 export type ChainFamily = "evm" | "solana";
 
 export type ChainId = string;
@@ -29,6 +32,9 @@ export type Chain = {
 
 export interface ChainAdapter<TAddress extends string = string> {
   readonly family: ChainFamily;
+  supports(chainId: ChainId, networkId: NetworkId): boolean;
   isValidAddress(address: string): address is TAddress;
   normalizeAddress(address: string): TAddress;
+  getBalance(account: Account, asset: WalletAsset): Promise<Balance>;
+  getTransactionReceipt(networkId: NetworkId, hash: `0x${string}`): Promise<TransactionReceipt | null>;
 }
