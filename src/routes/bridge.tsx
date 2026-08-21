@@ -66,7 +66,7 @@ function BridgePage() {
   const [amount, setAmount] = useState("0.5");
   const [pending, setPending] = useState(false);
 
-  const asset = assetMap[symbol];
+  const asset = assetMap[symbol]!;
   const value = (Number(amount) || 0) * asset.price;
   const received = (Number(amount) || 0) * 0.9985;
 
@@ -100,7 +100,7 @@ function BridgePage() {
               ))}
             </select>
             <span className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2">
-              <TokenIcon symbol={asset.symbol} glyph={asset.glyph} color={asset.color} size={22} />
+              <TokenIcon asset={asset} size={22} showChain={false} />
             </span>
           </div>
         </div>

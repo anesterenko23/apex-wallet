@@ -45,7 +45,7 @@ function TokenField({
   readOnly?: boolean;
   balance?: number;
 }) {
-  const asset = assetMap[symbol];
+  const asset = assetMap[symbol]!;
   return (
     <Panel className="p-4">
       <div className="flex items-center justify-between text-[11px] uppercase tracking-wider text-muted-foreground">
@@ -78,7 +78,7 @@ function TokenField({
             ))}
           </select>
           <span className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2">
-            <TokenIcon symbol={asset.symbol} glyph={asset.glyph} color={asset.color} size={22} />
+            <TokenIcon asset={asset} size={22} showChain={false} />
           </span>
         </div>
       </div>
@@ -100,7 +100,7 @@ function SwapPage() {
   const [slippage, setSlippage] = useState("0.5");
   const [pending, setPending] = useState(false);
 
-  const rate = assetMap[from].price / assetMap[to].price;
+  const rate = assetMap[from]!.price / assetMap[to]!.price;
   const out = useMemo(() => (Number(amount) || 0) * rate * 0.997, [amount, rate]);
   const balance = accountAssets.find((a) => a.symbol === from)?.balance ?? 0;
 

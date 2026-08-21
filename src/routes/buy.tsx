@@ -38,7 +38,7 @@ function BuyPage() {
   const [fiat, setFiat] = useState(250);
   const [symbol, setSymbol] = useState("ETH");
   const [method, setMethod] = useState("card");
-  const asset = assetMap[symbol];
+  const asset = assetMap[symbol]!;
   const feeRate = method === "bank" ? 0.005 : method === "apple" ? 0.019 : 0.015;
   const fee = fiat * feeRate;
   const tokens = (fiat - fee) / asset.price;
@@ -70,7 +70,7 @@ function BuyPage() {
 
       <div className="mt-4 grid grid-cols-4 gap-1.5">
         {buyable.map((s) => {
-          const a = assetMap[s];
+          const a = assetMap[s]!;
           return (
             <button
               key={s}
@@ -82,7 +82,7 @@ function BuyPage() {
                   : "border-border text-muted-foreground hover:text-foreground",
               )}
             >
-              <TokenIcon symbol={a.symbol} glyph={a.glyph} color={a.color} size={26} />
+              <TokenIcon asset={a} size={26} showChain={false} />
               {s}
             </button>
           );

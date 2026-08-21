@@ -13,7 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ActivityRouteImport } from './routes/activity'
 import { Route as AppsRouteImport } from './routes/apps'
 import { Route as AssetsRouteImport } from './routes/assets'
+import { Route as BridgeRouteImport } from './routes/bridge'
+import { Route as BuyRouteImport } from './routes/buy'
 import { Route as NftsRouteImport } from './routes/nfts'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SwapRouteImport } from './routes/swap'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -35,9 +39,29 @@ const AssetsRoute = AssetsRouteImport.update({
   path: '/assets',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BridgeRoute = BridgeRouteImport.update({
+  id: '/bridge',
+  path: '/bridge',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BuyRoute = BuyRouteImport.update({
+  id: '/buy',
+  path: '/buy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NftsRoute = NftsRouteImport.update({
   id: '/nfts',
   path: '/nfts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SwapRoute = SwapRouteImport.update({
+  id: '/swap',
+  path: '/swap',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -46,14 +70,22 @@ export interface FileRoutesByFullPath {
   '/activity': typeof ActivityRoute
   '/apps': typeof AppsRoute
   '/assets': typeof AssetsRoute
+  '/bridge': typeof BridgeRoute
+  '/buy': typeof BuyRoute
   '/nfts': typeof NftsRoute
+  '/settings': typeof SettingsRoute
+  '/swap': typeof SwapRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/activity': typeof ActivityRoute
   '/apps': typeof AppsRoute
   '/assets': typeof AssetsRoute
+  '/bridge': typeof BridgeRoute
+  '/buy': typeof BuyRoute
   '/nfts': typeof NftsRoute
+  '/settings': typeof SettingsRoute
+  '/swap': typeof SwapRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -61,14 +93,46 @@ export interface FileRoutesById {
   '/activity': typeof ActivityRoute
   '/apps': typeof AppsRoute
   '/assets': typeof AssetsRoute
+  '/bridge': typeof BridgeRoute
+  '/buy': typeof BuyRoute
   '/nfts': typeof NftsRoute
+  '/settings': typeof SettingsRoute
+  '/swap': typeof SwapRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/activity' | '/apps' | '/assets' | '/nfts'
+  fullPaths:
+    | '/'
+    | '/activity'
+    | '/apps'
+    | '/assets'
+    | '/bridge'
+    | '/buy'
+    | '/nfts'
+    | '/settings'
+    | '/swap'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/activity' | '/apps' | '/assets' | '/nfts'
-  id: '__root__' | '/' | '/activity' | '/apps' | '/assets' | '/nfts'
+  to:
+    | '/'
+    | '/activity'
+    | '/apps'
+    | '/assets'
+    | '/bridge'
+    | '/buy'
+    | '/nfts'
+    | '/settings'
+    | '/swap'
+  id:
+    | '__root__'
+    | '/'
+    | '/activity'
+    | '/apps'
+    | '/assets'
+    | '/bridge'
+    | '/buy'
+    | '/nfts'
+    | '/settings'
+    | '/swap'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,7 +140,11 @@ export interface RootRouteChildren {
   ActivityRoute: typeof ActivityRoute
   AppsRoute: typeof AppsRoute
   AssetsRoute: typeof AssetsRoute
+  BridgeRoute: typeof BridgeRoute
+  BuyRoute: typeof BuyRoute
   NftsRoute: typeof NftsRoute
+  SettingsRoute: typeof SettingsRoute
+  SwapRoute: typeof SwapRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -109,11 +177,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AssetsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bridge': {
+      id: '/bridge'
+      path: '/bridge'
+      fullPath: '/bridge'
+      preLoaderRoute: typeof BridgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/buy': {
+      id: '/buy'
+      path: '/buy'
+      fullPath: '/buy'
+      preLoaderRoute: typeof BuyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/nfts': {
       id: '/nfts'
       path: '/nfts'
       fullPath: '/nfts'
       preLoaderRoute: typeof NftsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/swap': {
+      id: '/swap'
+      path: '/swap'
+      fullPath: '/swap'
+      preLoaderRoute: typeof SwapRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -124,7 +220,11 @@ const rootRouteChildren: RootRouteChildren = {
   ActivityRoute: ActivityRoute,
   AppsRoute: AppsRoute,
   AssetsRoute: AssetsRoute,
+  BridgeRoute: BridgeRoute,
+  BuyRoute: BuyRoute,
   NftsRoute: NftsRoute,
+  SettingsRoute: SettingsRoute,
+  SwapRoute: SwapRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
