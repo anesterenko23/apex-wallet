@@ -18,6 +18,7 @@ import { Route as BuyRouteImport } from './routes/buy'
 import { Route as NftsRouteImport } from './routes/nfts'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SwapRouteImport } from './routes/swap'
+import { Route as AssetSymbolRouteImport } from './routes/asset/$symbol'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,6 +65,11 @@ const SwapRoute = SwapRouteImport.update({
   path: '/swap',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssetSymbolRoute = AssetSymbolRouteImport.update({
+  id: '/asset/$symbol',
+  path: '/asset/$symbol',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/nfts': typeof NftsRoute
   '/settings': typeof SettingsRoute
   '/swap': typeof SwapRoute
+  '/asset/$symbol': typeof AssetSymbolRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/nfts': typeof NftsRoute
   '/settings': typeof SettingsRoute
   '/swap': typeof SwapRoute
+  '/asset/$symbol': typeof AssetSymbolRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/nfts': typeof NftsRoute
   '/settings': typeof SettingsRoute
   '/swap': typeof SwapRoute
+  '/asset/$symbol': typeof AssetSymbolRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/nfts'
     | '/settings'
     | '/swap'
+    | '/asset/$symbol'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/nfts'
     | '/settings'
     | '/swap'
+    | '/asset/$symbol'
   id:
     | '__root__'
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/nfts'
     | '/settings'
     | '/swap'
+    | '/asset/$symbol'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   NftsRoute: typeof NftsRoute
   SettingsRoute: typeof SettingsRoute
   SwapRoute: typeof SwapRoute
+  AssetSymbolRoute: typeof AssetSymbolRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -212,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SwapRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/asset/$symbol': {
+      id: '/asset/$symbol'
+      path: '/asset/$symbol'
+      fullPath: '/asset/$symbol'
+      preLoaderRoute: typeof AssetSymbolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   NftsRoute: NftsRoute,
   SettingsRoute: SettingsRoute,
   SwapRoute: SwapRoute,
+  AssetSymbolRoute: AssetSymbolRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
