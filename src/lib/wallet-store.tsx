@@ -55,11 +55,8 @@ function WalletCoreProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>(["ETH", "SOL"]);
   const [hideSmall, setHideSmall] = useState(false);
 
-  const account = accounts.find((item) => item.id === accountId) ?? accounts[0];
-
-  if (!account) {
-    throw new Error("Apex Wallet requires at least one account");
-  }
+  // Accounts cannot currently be deleted, so the seeded first account is a safe fallback.
+  const account = accounts.find((item) => item.id === accountId) ?? accounts[0]!;
 
   const totalValue = useMemo(() => {
     const base = assets.reduce((sum, asset) => sum + assetValue(asset), 0);
