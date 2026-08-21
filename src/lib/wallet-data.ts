@@ -203,7 +203,7 @@ export function buildSeries(end: number, range: Range, seed = 7): SeriesPoint[] 
     v += trend + (rand() - 0.48) * start * cfg.vol;
     raw.push(v);
   }
-  const scale = end / raw[raw.length - 1];
+  const scale = end / (raw[raw.length - 1] ?? end);
   return raw.map((value, i) => ({
     t: now - (cfg.points - 1 - i) * cfg.stepMs,
     v: value * scale,
