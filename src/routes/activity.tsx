@@ -19,13 +19,13 @@ import { TransactionDetail } from "@/components/wallet/TransactionDetail";
 export const Route = createFileRoute("/activity")({
   head: () => ({
     meta: [
-      { title: "Activity — Aperture Wallet" },
+      { title: "Activity — Apex Wallet" },
       {
         name: "description",
         content:
           "Full multi-chain transaction history: sends, receives, swaps, bridges and contract interactions with fees and status.",
       },
-      { property: "og:title", content: "Activity — Aperture Wallet" },
+      { property: "og:title", content: "Activity — Apex Wallet" },
       {
         property: "og:description",
         content: "Multi-chain transaction history with fees, status and explorer links.",
