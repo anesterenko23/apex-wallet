@@ -16,6 +16,7 @@ import type {
 } from "./types";
 
 const DEFAULT_PATH = "m/44'/60'/0'/0/0" as const;
+const MIN_PASSWORD_LENGTH = 12;
 
 export class WalletVault {
   private payload: VaultPayload | null = null;
@@ -31,12 +32,14 @@ export class WalletVault {
   }
 
   async create(password: string): Promise<CreatedVaultWallet> {
+    this.assertPassword(password);
     if (await this.exists()) throw new VaultAlreadyExistsError();
     const mnemonic = generateMnemonic(english, 256);
     return this.initializeFromMnemonic(mnemonic, password);
   }
 
   async importMnemonic(mnemonic: string, password: string): Promise<CreatedVaultWallet> {
+    this.assertPassword(password);
     if (await this.exists()) throw new VaultAlreadyExistsError();
     return this.initializeFromMnemonic(mnemonic.trim().replace(/\s+/g, " "), password);
   }
@@ -56,8 +59,8 @@ export class WalletVault {
   }
 
   lock(): void {
-    // JS runtimes do not guarantee string zeroization. Dropping every live reference is the
-    // strongest portable action available here; see the threat model for this limitation.
+    // JavaScript runtimes do not guarantee string zeroization. Dropping every live reference is
+    // the strongest portable action available here; see the threat model for this limitation.
     this.payload = null;
   }
 
@@ -69,12 +72,15 @@ export class WalletVault {
     const payload = this.requirePayload();
     const descriptor = payload.accounts.find((account) => account.id === accountId);
     if (!descriptor) throw new Error(`Unknown vault account: ${accountId}`);
-
     return mnemonicToAccount(payload.mnemonic, { path: descriptor.derivationPath });
   }
 
-  async addAccount(): Promise<VaultAccountDescriptor> {
+  async addAccount(password: string): Promise<VaultAccountDescriptor> {
     const payload = this.requirePayload();
+    const existing = await this.storage.load();
+    if (!existing) throw new VaultNotFoundError();
+    await this.verifyPassword(existing, password);
+
     const accountIndex = payload.accounts.length;
     const derivationPath = `m/44'/60'/0'/0/${accountIndex}` as const;
     const localAccount = mnemonicToAccount(payload.mnemonic, { path: derivationPath });
@@ -83,13 +89,19 @@ export class WalletVault {
       address: localAccount.address,
       derivationPath,
     };
+    const nextPayload: VaultPayload = {
+      mnemonic: payload.mnemonic,
+      accounts: [...payload.accounts, descriptor],
+    };
 
-    payload.accounts.push(descriptor);
-    await this.persistUnlockedPayload();
+    const encrypted = await encryptVaultPayload(nextPayload, password, existing.createdAt);
+    await this.storage.save(encrypted);
+    this.payload = nextPayload;
     return { ...descriptor };
   }
 
   async changePassword(currentPassword: string, nextPassword: string): Promise<void> {
+    this.assertPassword(nextPassword);
     const encrypted = await this.storage.load();
     if (!encrypted) throw new VaultNotFoundError();
 
@@ -123,43 +135,12 @@ export class WalletVault {
     return { mnemonic, account: { ...descriptor } };
   }
 
-  private async persistUnlockedPayload(): Promise<void> {
-    const payload = this.requirePayload();
-    const existing = await this.storage.load();
-    if (!existing) throw new VaultNotFoundError();
-    throw new Error(
-      "Persisting account changes requires password re-authentication; use addAccountWithPassword instead",
-    );
-  }
-
-  async addAccountWithPassword(password: string): Promise<VaultAccountDescriptor> {
-    const payload = this.requirePayload();
-    const accountIndex = payload.accounts.length;
-    const derivationPath = `m/44'/60'/0'/0/${accountIndex}` as const;
-    const localAccount = mnemonicToAccount(payload.mnemonic, { path: derivationPath });
-    const descriptor: VaultAccountDescriptor = {
-      id: crypto.randomUUID(),
-      address: localAccount.address,
-      derivationPath,
-    };
-
-    const nextPayload: VaultPayload = {
-      mnemonic: payload.mnemonic,
-      accounts: [...payload.accounts, descriptor],
-    };
-    const existing = await this.storage.load();
-    if (!existing) throw new VaultNotFoundError();
-
+  private async verifyPassword(vault: EncryptedVault, password: string): Promise<void> {
     try {
-      await decryptVaultPayload(existing, password);
+      await decryptVaultPayload(vault, password);
     } catch {
       throw new VaultUnlockError();
     }
-
-    const encrypted = await encryptVaultPayload(nextPayload, password, existing.createdAt);
-    await this.storage.save(encrypted);
-    this.payload = nextPayload;
-    return { ...descriptor };
   }
 
   private requirePayload(): VaultPayload {
@@ -170,6 +151,12 @@ export class WalletVault {
   private assertPayload(payload: VaultPayload): void {
     if (!payload.mnemonic || !Array.isArray(payload.accounts) || payload.accounts.length === 0) {
       throw new Error("Invalid vault payload");
+    }
+  }
+
+  private assertPassword(password: string): void {
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      throw new Error(`Vault password must be at least ${MIN_PASSWORD_LENGTH} characters`);
     }
   }
 }
