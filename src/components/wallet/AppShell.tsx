@@ -61,7 +61,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Wallet className="size-4 text-primary" />
           </span>
           {!sidebarCollapsed && (
-            <span className="flex-1 text-sm font-semibold tracking-tight">Aperture</span>
+            <span className="flex-1 text-sm font-semibold tracking-tight">Apex</span>
           )}
           <button
             onClick={toggleSidebar}

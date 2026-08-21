@@ -13,13 +13,13 @@ import { TxIcon } from "@/components/wallet/TxIcon";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Portfolio — Aperture Wallet" },
+      { title: "Portfolio — Apex Wallet" },
       {
         name: "description",
         content:
-          "Aperture is a multi-chain self-custody wallet: track your portfolio, send, swap, and bridge assets across eight networks.",
+          "Apex is a multi-chain self-custody wallet: track your portfolio, send, swap, and bridge assets across eight networks.",
       },
-      { property: "og:title", content: "Portfolio — Aperture Wallet" },
+      { property: "og:title", content: "Portfolio — Apex Wallet" },
       {
         property: "og:description",
         content: "Multi-chain self-custody wallet with portfolio tracking, swaps, and bridging.",

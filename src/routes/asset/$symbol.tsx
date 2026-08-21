@@ -28,12 +28,12 @@ export const Route = createFileRoute("/asset/$symbol")({
     const symbol = loaderData?.symbol ?? "";
     return {
       meta: [
-        { title: `${name} (${symbol}) — Aperture Wallet` },
+        { title: `${name} (${symbol}) — Apex Wallet` },
         {
           name: "description",
           content: `Track your ${name} balance, price performance and ${symbol} transaction history, then send or swap in one tap.`,
         },
-        { property: "og:title", content: `${name} (${symbol}) — Aperture Wallet` },
+        { property: "og:title", content: `${name} (${symbol}) — Apex Wallet` },
         {
           property: "og:description",
           content: `${name} balance, performance and transaction history.`,
