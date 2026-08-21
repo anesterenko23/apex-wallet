@@ -9,13 +9,13 @@ import { PageHeader, Panel } from "@/components/wallet/ui";
 export const Route = createFileRoute("/apps")({
   head: () => ({
     meta: [
-      { title: "Connected apps — Aperture Wallet" },
+      { title: "Connected apps — Apex Wallet" },
       {
         name: "description",
         content:
           "Review and revoke the dapps connected to your accounts, per network, with last-used activity.",
       },
-      { property: "og:title", content: "Connected apps — Aperture Wallet" },
+      { property: "og:title", content: "Connected apps — Apex Wallet" },
       {
         property: "og:description",
         content: "Review and revoke dapp connections across your accounts.",
