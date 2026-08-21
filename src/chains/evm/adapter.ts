@@ -13,13 +13,14 @@ import type { Account, Balance, WalletAsset } from "../../core/wallet/types";
 import { evmNetworkById, viemChainByNetworkId } from "./networks";
 import type { EvmAddress, EvmChainId, EvmNetworkId, EvmRpcUrls } from "./types";
 
-const supportedChains = new Set<EvmChainId>(["ethereum", "base", "arbitrum", "optimism"]);
-const supportedNetworks = new Set<EvmNetworkId>([
-  "ethereum-mainnet",
-  "base-mainnet",
-  "arbitrum-mainnet",
-  "optimism-mainnet",
-]);
+const networkByChain: Record<EvmChainId, EvmNetworkId> = {
+  ethereum: "ethereum-mainnet",
+  base: "base-mainnet",
+  arbitrum: "arbitrum-mainnet",
+  optimism: "optimism-mainnet",
+};
+
+const supportedNetworks = new Set<EvmNetworkId>(Object.values(networkByChain));
 
 export class EvmChainAdapter implements ChainAdapter<EvmAddress> {
   readonly family = "evm" as const;
@@ -28,7 +29,7 @@ export class EvmChainAdapter implements ChainAdapter<EvmAddress> {
   constructor(private readonly rpcUrls: EvmRpcUrls = {}) {}
 
   supports(chainId: ChainId, networkId: NetworkId): boolean {
-    return supportedChains.has(chainId as EvmChainId) && supportedNetworks.has(networkId as EvmNetworkId);
+    return networkByChain[chainId as EvmChainId] === networkId;
   }
 
   isValidAddress(address: string): address is EvmAddress {
