@@ -166,13 +166,13 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
 export function useWallet(): WalletState {
   const core = useContext(WalletCoreContext);
-  if (!core) throw new Error("useWallet must be used inside WalletProvider");
-
   const data = useWalletData();
   const settings = useWalletSettings();
   const ui = useWalletUi();
 
-  return useMemo(() => ({ ...core, ...data, ...settings, ...ui }), [core, data, settings, ui]);
+  if (!core) throw new Error("useWallet must be used inside WalletProvider");
+
+  return { ...core, ...data, ...settings, ...ui };
 }
 
 /** Assets scaled to the active mock account, filtered by the active network. */
