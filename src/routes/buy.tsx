@@ -10,13 +10,13 @@ import { PageHeader, Panel, Row } from "@/components/wallet/ui";
 export const Route = createFileRoute("/buy")({
   head: () => ({
     meta: [
-      { title: "Buy crypto — Aperture Wallet" },
+      { title: "Buy crypto — Apex Wallet" },
       {
         name: "description",
         content:
           "Fund your wallet with card, bank transfer or Apple Pay and receive tokens directly to your self-custody account.",
       },
-      { property: "og:title", content: "Buy crypto — Aperture Wallet" },
+      { property: "og:title", content: "Buy crypto — Apex Wallet" },
       {
         property: "og:description",
         content: "Fund your self-custody wallet with card, bank transfer or Apple Pay.",
