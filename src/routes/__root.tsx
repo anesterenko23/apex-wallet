@@ -80,14 +80,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Apex Wallet" },
+      {
+        name: "description",
+        content: "Apex is a premium multi-chain self-custody crypto wallet experience.",
+      },
+      { name: "author", content: "Apex Wallet" },
+      { property: "og:title", content: "Apex Wallet" },
+      {
+        property: "og:description",
+        content: "Portfolio, send, swap and bridge flows in one self-custody wallet.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
