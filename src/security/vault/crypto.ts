@@ -18,7 +18,7 @@ function base64ToBytes(value: string): Uint8Array {
 }
 
 async function deriveVaultKey(password: string, salt: Uint8Array): Promise<CryptoKey> {
-  const passwordBytes = encoder.encode(password.normalize("NFKC"));
+  const passwordBytes = encoder.encode(password);
   try {
     const keyMaterial = await crypto.subtle.importKey(
       "raw",
