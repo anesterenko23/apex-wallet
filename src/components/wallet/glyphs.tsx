@@ -1,7 +1,8 @@
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { networkMap, type Asset, type ChainId } from "@/lib/wallet-data";
 
-const glyphPaths: Record<Asset["glyph"], ReturnType<typeof glyphEth>> = {
+const glyphPaths: Record<Asset["glyph"], ReactNode> = {
   eth: glyphEth(),
   sol: glyphSol(),
   btc: glyphBtc(),
