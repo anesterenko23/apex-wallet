@@ -1,4 +1,4 @@
-import { english, generateMnemonic, mnemonicToAccount, type LocalAccount } from "viem/accounts";
+import { english, generateMnemonic, mnemonicToAccount } from "viem/accounts";
 import { decryptVaultPayload, encryptVaultPayload } from "./crypto";
 import {
   VaultAlreadyExistsError,
@@ -66,13 +66,6 @@ export class WalletVault {
 
   listAccounts(): readonly VaultAccountDescriptor[] {
     return this.requirePayload().accounts.map((account) => ({ ...account }));
-  }
-
-  getLocalAccount(accountId: string): LocalAccount {
-    const payload = this.requirePayload();
-    const descriptor = payload.accounts.find((account) => account.id === accountId);
-    if (!descriptor) throw new Error(`Unknown vault account: ${accountId}`);
-    return mnemonicToAccount(payload.mnemonic, { path: descriptor.derivationPath });
   }
 
   async addAccount(password: string): Promise<VaultAccountDescriptor> {
