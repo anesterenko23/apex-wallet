@@ -36,5 +36,9 @@ export interface ChainAdapter<TAddress extends string = string> {
   isValidAddress(address: string): address is TAddress;
   normalizeAddress(address: string): TAddress;
   getBalance(account: Account, asset: WalletAsset): Promise<Balance>;
-  getTransactionReceipt(networkId: NetworkId, hash: `0x${string}`): Promise<TransactionReceipt | null>;
+  getTransactionReceipt(
+    networkId: NetworkId,
+    transactionId: string,
+    hash: `0x${string}`,
+  ): Promise<TransactionReceipt | null>;
 }
