@@ -1,5 +1,5 @@
 import type { TransactionReceipt } from "../transactions/types";
-import type { Account, Balance, WalletAsset } from "../wallet/types";
+import type { Account, Address, Balance, WalletAsset } from "../wallet/types";
 
 export type ChainFamily = "evm" | "solana";
 
@@ -30,12 +30,21 @@ export type Chain = {
   networks: readonly Network[];
 };
 
+export type TokenContractMetadata = {
+  name: string;
+  symbol: string;
+  decimals: number;
+};
+
 export interface ChainAdapter<TAddress extends string = string> {
   readonly family: ChainFamily;
   supports(chainId: ChainId, networkId: NetworkId): boolean;
   isValidAddress(address: string): address is TAddress;
   normalizeAddress(address: string): TAddress;
   getBalance(account: Account, asset: WalletAsset): Promise<Balance>;
+  getGasPrice(networkId: NetworkId): Promise<bigint>;
+  resolveName(name: string): Promise<Address | null>;
+  getTokenMetadata(networkId: NetworkId, contractAddress: Address): Promise<TokenContractMetadata>;
   getTransactionReceipt(
     networkId: NetworkId,
     transactionId: string,

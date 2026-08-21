@@ -6,10 +6,15 @@ import {
   isAddress,
   type PublicClient,
 } from "viem";
-import type { ChainAdapter, ChainId, NetworkId } from "../../core/chains/types";
+import type {
+  ChainAdapter,
+  ChainId,
+  NetworkId,
+  TokenContractMetadata,
+} from "../../core/chains/types";
 import type { TransactionReceipt } from "../../core/transactions/types";
 import { InvalidAddressError } from "../../core/wallet/errors";
-import type { Account, Balance, WalletAsset } from "../../core/wallet/types";
+import type { Account, Address, Balance, WalletAsset } from "../../core/wallet/types";
 import { evmNetworkById, viemChainByNetworkId } from "./networks";
 import type { EvmAddress, EvmChainId, EvmNetworkId, EvmRpcUrls } from "./types";
 
@@ -67,6 +72,34 @@ export class EvmChainAdapter implements ChainAdapter<EvmAddress> {
     };
   }
 
+  async getGasPrice(networkId: NetworkId): Promise<bigint> {
+    this.assertSupportedNetwork(networkId);
+    return this.getClient(networkId as EvmNetworkId).getGasPrice();
+  }
+
+  async resolveName(name: string): Promise<Address | null> {
+    const client = this.getClient("ethereum-mainnet");
+    const address = await client.getEnsAddress({ name });
+    return address ? (this.normalizeAddress(address) as Address) : null;
+  }
+
+  async getTokenMetadata(
+    networkId: NetworkId,
+    contractAddress: Address,
+  ): Promise<TokenContractMetadata> {
+    this.assertSupportedNetwork(networkId);
+    const client = this.getClient(networkId as EvmNetworkId);
+    const address = this.normalizeAddress(contractAddress);
+
+    const [name, symbol, decimals] = await Promise.all([
+      client.readContract({ address, abi: erc20Abi, functionName: "name" }),
+      client.readContract({ address, abi: erc20Abi, functionName: "symbol" }),
+      client.readContract({ address, abi: erc20Abi, functionName: "decimals" }),
+    ]);
+
+    return { name, symbol, decimals };
+  }
+
   async getTransactionReceipt(
     networkId: NetworkId,
     transactionId: string,
@@ -104,6 +137,12 @@ export class EvmChainAdapter implements ChainAdapter<EvmAddress> {
 
     this.clients.set(networkId, client);
     return client;
+  }
+
+  private assertSupportedNetwork(networkId: NetworkId): void {
+    if (!supportedNetworks.has(networkId as EvmNetworkId)) {
+      throw new Error(`Unsupported EVM network: ${networkId}`);
+    }
   }
 
   private assertCompatible(account: Account, asset: WalletAsset): void {

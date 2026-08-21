@@ -1,8 +1,9 @@
 import { ChainAdapterRegistry } from "../chains/adapter-registry";
 import { ChainRegistry } from "../chains/registry";
+import type { TokenContractMetadata } from "../chains/types";
 import type { TransactionReceipt } from "../transactions/types";
 import { AccountNotFoundError, InvalidWalletStateError } from "./errors";
-import type { Account, Balance, Wallet, WalletAsset } from "./types";
+import type { Account, Address, Balance, Wallet, WalletAsset } from "./types";
 
 export function attachAccount(wallet: Wallet, account: Account): Wallet {
   if (account.walletId !== wallet.id) throw new InvalidWalletStateError("Account belongs to another wallet");
@@ -37,6 +38,28 @@ export class WalletCore {
     const chain = this.chains.get(asset.chainId);
     const adapter = this.adapters.resolve(chain.family, asset.chainId, asset.networkId);
     return adapter.getBalance(account, asset);
+  }
+
+  async getGasPrice(chainId: string, networkId: string): Promise<bigint> {
+    const chain = this.chains.get(chainId);
+    const adapter = this.adapters.resolve(chain.family, chainId, networkId);
+    return adapter.getGasPrice(networkId);
+  }
+
+  async resolveName(name: string): Promise<Address | null> {
+    const chain = this.chains.get("ethereum");
+    const adapter = this.adapters.resolve(chain.family, "ethereum", chain.defaultNetworkId);
+    return adapter.resolveName(name);
+  }
+
+  async getTokenMetadata(
+    chainId: string,
+    networkId: string,
+    contractAddress: Address,
+  ): Promise<TokenContractMetadata> {
+    const chain = this.chains.get(chainId);
+    const adapter = this.adapters.resolve(chain.family, chainId, networkId);
+    return adapter.getTokenMetadata(networkId, contractAddress);
   }
 
   async getTransactionReceipt(
