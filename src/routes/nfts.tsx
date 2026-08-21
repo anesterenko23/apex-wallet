@@ -18,13 +18,13 @@ import {
 export const Route = createFileRoute("/nfts")({
   head: () => ({
     meta: [
-      { title: "NFTs — Aperture Wallet" },
+      { title: "NFTs — Apex Wallet" },
       {
         name: "description",
         content:
           "Your generative art and collectibles across chains, with floor prices, traits and spam filtering.",
       },
-      { property: "og:title", content: "NFTs — Aperture Wallet" },
+      { property: "og:title", content: "NFTs — Apex Wallet" },
       {
         property: "og:description",
         content: "Collectibles across chains with floor prices and traits.",
