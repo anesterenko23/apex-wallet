@@ -214,7 +214,12 @@ export const shortAddress = (a: string, lead = 6, tail = 4) =>
   `${a.slice(0, lead)}...${a.slice(-tail)}`;
 
 export const fmtUsd = (n: number, max = 2) =>
-  n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: max });
+  n.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: Math.min(2, max),
+    maximumFractionDigits: max,
+  });
 
 export const fmtUsdCompact = (n: number) =>
   n >= 1_000_000 ? `$${(n / 1_000_000).toFixed(2)}M` : fmtUsd(n);
