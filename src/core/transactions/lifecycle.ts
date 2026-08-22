@@ -1,8 +1,9 @@
 import type { Transaction, TransactionStatus } from "./types";
 
 const allowedTransitions: Record<TransactionStatus, readonly TransactionStatus[]> = {
-  draft: ["prepared", "failed"],
-  prepared: ["signed", "failed"],
+  draft: ["awaiting_confirmation", "failed"],
+  awaiting_confirmation: ["authorized", "failed"],
+  authorized: ["signed", "failed"],
   signed: ["submitted", "failed"],
   submitted: ["confirmed", "failed"],
   confirmed: [],
@@ -13,7 +14,11 @@ export function canTransitionTransaction(from: TransactionStatus, to: Transactio
   return allowedTransitions[from].includes(to);
 }
 
-export function transitionTransaction(transaction: Transaction, status: TransactionStatus, now = new Date().toISOString()): Transaction {
+export function transitionTransaction(
+  transaction: Transaction,
+  status: TransactionStatus,
+  now = new Date().toISOString(),
+): Transaction {
   if (!canTransitionTransaction(transaction.status, status)) {
     throw new Error(`Invalid transaction transition: ${transaction.status} -> ${status}`);
   }

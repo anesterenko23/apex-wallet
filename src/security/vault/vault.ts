@@ -1,4 +1,5 @@
 import { english, generateMnemonic, mnemonicToAccount } from "viem/accounts";
+import type { Hex } from "../../core/wallet/types";
 import { decryptVaultPayload, encryptVaultPayload } from "./crypto";
 import {
   VaultAlreadyExistsError,
@@ -17,6 +18,17 @@ import type {
 
 const DEFAULT_PATH = "m/44'/60'/0'/0/0" as const;
 const MIN_PASSWORD_LENGTH = 12;
+
+export type VaultEvmTransaction = {
+  chainId: number;
+  nonce: number;
+  gas: bigint;
+  maxFeePerGas: bigint;
+  maxPriorityFeePerGas: bigint;
+  to: `0x${string}`;
+  value: bigint;
+  data?: `0x${string}`;
+};
 
 export class WalletVault {
   private payload: VaultPayload | null = null;
@@ -59,13 +71,27 @@ export class WalletVault {
   }
 
   lock(): void {
-    // JavaScript runtimes do not guarantee string zeroization. Dropping every live reference is
-    // the strongest portable action available here; see the threat model for this limitation.
     this.payload = null;
   }
 
   listAccounts(): readonly VaultAccountDescriptor[] {
     return this.requirePayload().accounts.map((account) => ({ ...account }));
+  }
+
+  async signEvmTransaction(
+    accountId: string,
+    password: string,
+    transaction: VaultEvmTransaction,
+  ): Promise<Hex> {
+    const payload = this.requirePayload();
+    const existing = await this.storage.load();
+    if (!existing) throw new VaultNotFoundError();
+    await this.verifyPassword(existing, password);
+
+    const descriptor = payload.accounts.find((account) => account.id === accountId);
+    if (!descriptor) throw new Error(`Unknown vault account: ${accountId}`);
+    const account = mnemonicToAccount(payload.mnemonic, { path: descriptor.derivationPath });
+    return account.signTransaction(transaction) as Promise<Hex>;
   }
 
   async addAccount(password: string): Promise<VaultAccountDescriptor> {
